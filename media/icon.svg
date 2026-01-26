@@ -1,0 +1,9 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cup Body -->
+  <path d="M5 10C5 8.89543 5.89543 8 7 8H15C16.1046 8 17 8.89543 17 10V14C17 17.3137 14.3137 20 11 20H9C5.68629 20 3 17.3137 3 14V13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <!-- Handle -->
+  <path d="M17 10H18.5C20.433 10 22 11.567 22 13.5C22 15.433 20.433 17 18.5 17H17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <!-- Steam -->
+  <path d="M8 5C8 5 8.5 4 9.5 4C10.5 4 11 5 11 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12 5C12 5 12.5 4 13.5 4C14.5 4 15 5 15 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

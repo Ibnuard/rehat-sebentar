@@ -1,0 +1,157 @@
+:root {
+  --primary-color: #6366f1;
+  --secondary-color: #4f46e5;
+  --bg-color: var(--vscode-sideBar-background);
+  --text-color: var(--vscode-foreground);
+  --input-bg: var(--vscode-input-background);
+  --input-fg: var(--vscode-input-foreground);
+  --button-bg: var(--vscode-button-background);
+  --button-fg: var(--vscode-button-foreground);
+}
+
+body {
+  font-family: var(--vscode-font-family);
+  padding: 16px;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  user-select: none;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.header {
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.status-card {
+  background: var(--vscode-editor-background);
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid var(--vscode-panel-border);
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.timer-display {
+  font-size: 2.2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 4px;
+  font-family: var(--vscode-editor-font-family);
+}
+
+.timer-label {
+  font-size: 0.75rem;
+  opacity: 0.6;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.presets {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+button {
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  border: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+}
+
+.btn-primary {
+  background: var(--button-bg);
+  color: var(--button-fg);
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+}
+
+.btn-secondary {
+  background: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-secondaryForeground);
+}
+
+.btn-secondary:hover {
+  filter: brightness(1.1);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--vscode-panel-border);
+  color: var(--text-color);
+}
+
+.btn-outline:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+input[type="time"] {
+  background: var(--input-bg);
+  color: var(--input-fg);
+  border: 1px solid var(--vscode-input-border);
+  padding: 6px;
+  border-radius: 2px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.hint {
+  font-size: 0.7rem;
+  opacity: 0.5;
+  text-align: center;
+  font-style: italic;
+  margin-top: 12px;
+}
+
+/* Animations */
+@keyframes subtle-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.01);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.active-timer {
+  animation: subtle-pulse 4s infinite ease-in-out;
+  border-color: var(--primary-color) !important;
+}
