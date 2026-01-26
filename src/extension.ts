@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { RehatSebentarView } from "./rehatSebentarView";
+import * as cp from "child_process";
 
 /**
  * Alarm state
@@ -8,6 +9,7 @@ let alarmTimer: NodeJS.Timeout | undefined;
 let alarmTime: string | undefined; // HH:mm
 let alarmTriggered = false;
 let viewProvider: RehatSebentarView;
+let currentSoundProcess: cp.ChildProcess | undefined;
 
 export function activate(context: vscode.ExtensionContext) {
   viewProvider = new RehatSebentarView(context);
@@ -61,10 +63,34 @@ export function activate(context: vscode.ExtensionContext) {
     },
   );
 
+  const toggleSoundCommand = vscode.commands.registerCommand(
+    "rehatsebentar.toggleSound",
+    async (enabled: boolean) => {
+      await context.globalState.update("soundEnabled", enabled);
+    },
+  );
+
+  const setSoundCommand = vscode.commands.registerCommand(
+    "rehatsebentar.setSound",
+    async (soundFile: string) => {
+      await context.globalState.update("selectedSound", soundFile);
+    },
+  );
+
+  const previewSoundCommand = vscode.commands.registerCommand(
+    "rehatsebentar.previewSound",
+    () => {
+      playSound(context, false);
+    },
+  );
+
   context.subscriptions.push(
     testCommand,
     setAlarmCommand,
     stopAlarmCommand,
+    toggleSoundCommand,
+    setSoundCommand,
+    previewSoundCommand,
     vscode.window.registerWebviewViewProvider(
       RehatSebentarView.viewType,
       viewProvider,
@@ -125,6 +151,16 @@ function startAlarmChecking(
 
     if (currentStr === targetTime && !alarmTriggered) {
       alarmTriggered = true;
+
+      // Play sound if enabled (with loop)
+      const soundEnabled = context.globalState.get<boolean>(
+        "soundEnabled",
+        true,
+      );
+      if (soundEnabled) {
+        playSound(context, true);
+      }
+
       vscode.window
         .showInformationMessage(
           "☕ Sudah waktunya. Rehat sebentar, ya.",
@@ -133,6 +169,7 @@ function startAlarmChecking(
           "Snooze 5m",
         )
         .then((selection) => {
+          stopSound();
           if (selection === "Stop Alarm") {
             stopAlarm(context);
           } else if (selection === "Snooze 5m") {
@@ -162,10 +199,45 @@ function stopAlarm(context: vscode.ExtensionContext) {
   alarmTriggered = false;
   context.globalState.update("alarmTime", undefined);
   viewProvider.updateState(undefined);
+  stopSound();
 }
 
 export function deactivate() {
   if (alarmTimer) {
     clearInterval(alarmTimer);
+  }
+  stopSound();
+}
+
+function playSound(context: vscode.ExtensionContext, loop: boolean) {
+  stopSound();
+
+  const soundFile = context.globalState.get<string>(
+    "selectedSound",
+    "alarm1.wav",
+  );
+  const soundPath = vscode.Uri.joinPath(
+    context.extensionUri,
+    "media",
+    soundFile,
+  ).fsPath;
+
+  // Since user is on Mac
+  if (loop) {
+    // Wrap afplay in a loop shell command
+    currentSoundProcess = cp.spawn("sh", [
+      "-c",
+      `while true; do afplay "${soundPath}"; done`,
+    ]);
+  } else {
+    currentSoundProcess = cp.spawn("afplay", [soundPath]);
+  }
+}
+
+function stopSound() {
+  if (currentSoundProcess) {
+    // Kill the whole process group if needed, but sh -c usually kills descendants
+    currentSoundProcess.kill();
+    currentSoundProcess = undefined;
   }
 }

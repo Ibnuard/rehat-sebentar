@@ -10,6 +10,8 @@ Sebagai developer, saya sendiri sering lupa waktu saat ngoding, bilangnya sebent
 - **Custom Alarm**: Atur waktu sesuai keinginan.
 - **Countown Real-time**: Pantau sisa waktu langsung dari sidebar.
 - **Modal Alarm**: Notifikasi muncul sebagai modal overlay sehingga pengguna lebih aware.
+- **Alarm Sound**: Dukungan 3 suara alarm kustom (`alarm1.wav`, `alarm2.wav`, `alarm3.wav`).
+- **Preview Suara**: Cek suara pilihan Anda secara langsung sebelum menyetel alarm.
 - **Snooze Support**: Butuh 5 menit lagi? Cukup klik Snooze.
 - **Clean UI**: Tampilan yang bersih dan terintegrasi langsung dengan tema VS Code ( Thank you gemini ).
 

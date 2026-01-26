@@ -130,6 +130,56 @@ input[type="time"] {
   box-sizing: border-box;
 }
 
+.setting-group {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.switch-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  opacity: 0.9;
+  cursor: pointer;
+  justify-content: center;
+}
+
+.switch-label input {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+}
+
+.hidden-settings {
+  display: none;
+}
+
+.sound-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.sound-dropdown {
+  flex: 1;
+  background: var(--input-bg);
+  color: var(--input-fg);
+  border: 1px solid var(--vscode-input-border);
+  padding: 4px;
+  border-radius: 2px;
+  font-size: 0.8rem;
+  outline: none;
+}
+
+#preview-btn {
+  padding: 4px 12px;
+  white-space: nowrap;
+}
+
 .hint {
   font-size: 0.7rem;
   opacity: 0.5;

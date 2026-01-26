@@ -34,11 +34,40 @@ export class RehatSebentarView implements vscode.WebviewViewProvider {
         case "setPreset":
           this.setPreset(message.minutes);
           break;
+        case "toggleSound":
+          vscode.commands.executeCommand(
+            "rehatsebentar.toggleSound",
+            message.enabled,
+          );
+          break;
+        case "setSound":
+          vscode.commands.executeCommand(
+            "rehatsebentar.setSound",
+            message.soundFile,
+          );
+          break;
+        case "previewSound":
+          vscode.commands.executeCommand("rehatsebentar.previewSound");
+          break;
       }
     });
 
     // Send initial state
     this.updateState();
+    this.updateSoundState(
+      this.context.globalState.get<boolean>("soundEnabled", true),
+      this.context.globalState.get<string>("selectedSound", "alarm1.wav"),
+    );
+  }
+
+  public updateSoundState(enabled: boolean, selectedSound: string) {
+    if (this._view) {
+      this._view.webview.postMessage({
+        command: "updateSound",
+        enabled,
+        selectedSound,
+      });
+    }
   }
 
   private setPreset(minutes: number) {
@@ -102,6 +131,25 @@ export class RehatSebentarView implements vscode.WebviewViewProvider {
         <input id="time" type="time" />
         <button id="set-custom-btn" class="btn-primary">Set Custom Alarm</button>
       </div>
+
+      <div class="setting-group">
+        <label class="switch-label">
+          <span>Enable Sound</span>
+          <input type="checkbox" id="sound-toggle" checked />
+        </label>
+      </div>
+
+      <div id="sound-settings" class="setting-group hidden-settings">
+        <label>Select Sound</label>
+        <div class="sound-controls">
+          <select id="sound-select" class="sound-dropdown">
+            <option value="alarm1.wav">Alarm 1</option>
+            <option value="alarm2.wav">Alarm 2</option>
+            <option value="alarm3.wav">Alarm 3</option>
+          </select>
+          <button id="preview-btn" class="btn-secondary">Play</button>
+        </div>
+      </div>
     </div>
 
     <button id="stop-btn" class="btn-outline" style="display: none;">Stop Alarm</button>
@@ -138,6 +186,23 @@ export class RehatSebentarView implements vscode.WebviewViewProvider {
       vscode.postMessage({ command: 'stopAlarm' });
     });
 
+    // Sound toggle
+    document.getElementById('sound-toggle').addEventListener('change', (e) => {
+      const enabled = e.target.checked;
+      vscode.postMessage({ command: 'toggleSound', enabled });
+      document.getElementById('sound-settings').style.display = enabled ? 'flex' : 'none';
+    });
+
+    // Sound select
+    document.getElementById('sound-select').addEventListener('change', (e) => {
+      vscode.postMessage({ command: 'setSound', soundFile: e.target.value });
+    });
+
+    // Preview button
+    document.getElementById('preview-btn').addEventListener('click', () => {
+      vscode.postMessage({ command: 'previewSound' });
+    });
+
     function format12h(timeStr) {
       if (!timeStr) return "--:--";
       const [hours, minutes] = timeStr.split(':').map(Number);
@@ -170,6 +235,10 @@ export class RehatSebentarView implements vscode.WebviewViewProvider {
           stopBtn.style.display = 'none';
           controls.style.display = 'block';
         }
+      } else if (message.command === 'updateSound') {
+        document.getElementById('sound-toggle').checked = message.enabled;
+        document.getElementById('sound-select').value = message.selectedSound || 'alarm1.wav';
+        document.getElementById('sound-settings').style.display = message.enabled ? 'flex' : 'none';
       }
     });
   </script>
