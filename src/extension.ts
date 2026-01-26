@@ -107,6 +107,38 @@ export function activate(context: vscode.ExtensionContext) {
   );
 }
 
+const HEALTH_TIPS = [
+  "🧘 Regangkan leher dan bahu Anda sejenak.",
+  "💧 Waktunya minum segelas air putih agar tetap fokus.",
+  "👀 Istirahatkan mata dengan melihat objek jauh selama 20 detik.",
+  "👋 Putar pergelangan tangan Anda untuk melemaskan otot.",
+  "🚶 Berdiri dan jalan-jalan kecil di sekitar meja Anda.",
+  "🌬️ Ambil napas dalam-dalam 3 kali untuk menjernihkan pikiran.",
+  "🍎 Jangan lupa makan buah atau camilan sehat hari ini.",
+];
+
+function getTodayKey() {
+  return new Date().toISOString().split("T")[0];
+}
+
+async function getTodayCommits(): Promise<number> {
+  return new Promise((resolve) => {
+    // This assumes the user is in a git repo.
+    // We try to find the root via workspace folders
+    const workspaceFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+    if (!workspaceFolder) return resolve(0);
+
+    cp.exec(
+      'git rev-list --count --since="00:00:00" HEAD',
+      { cwd: workspaceFolder },
+      (err, stdout) => {
+        if (err) return resolve(0);
+        resolve(parseInt(stdout.trim()) || 0);
+      },
+    );
+  });
+}
+
 function startAlarmChecking(
   context: vscode.ExtensionContext,
   targetTime: string,
@@ -115,7 +147,7 @@ function startAlarmChecking(
     clearInterval(alarmTimer);
   }
 
-  const update = () => {
+  const update = async () => {
     const now = new Date();
     const currentStr =
       now.getHours().toString().padStart(2, "0") +
@@ -156,7 +188,9 @@ function startAlarmChecking(
       remainingStr = "00:00";
     }
 
-    viewProvider.updateState(targetTime, remainingStr);
+    // Refresh stats periodically
+    const stats = await getRefreshStats(context);
+    viewProvider.updateState(targetTime, remainingStr, stats);
 
     // Update status bar
     statusBarItem.text = `$(coffee) ${remainingStr}`;
@@ -165,6 +199,12 @@ function startAlarmChecking(
 
     if (currentStr === targetTime && !alarmTriggered) {
       alarmTriggered = true;
+
+      // Increment break count
+      const today = getTodayKey();
+      const breakData = context.globalState.get<any>("breakStats", {});
+      breakData[today] = (breakData[today] || 0) + 1;
+      await context.globalState.update("breakStats", breakData);
 
       // Play sound if enabled (with loop)
       const soundEnabled = context.globalState.get<boolean>(
@@ -175,9 +215,12 @@ function startAlarmChecking(
         playSound(context, true);
       }
 
+      const randomTip =
+        HEALTH_TIPS[Math.floor(Math.random() * HEALTH_TIPS.length)];
+
       vscode.window
         .showInformationMessage(
-          "☕ Sudah waktunya. Rehat sebentar, ya.",
+          `☕ Sudah waktunya. Rehat sebentar, ya.\n\nTips: ${randomTip}`,
           { modal: true },
           "Stop Alarm",
           "Snooze 5m",
@@ -204,6 +247,19 @@ function startAlarmChecking(
   alarmTimer = setInterval(update, 1000); // Check every second for countdown
 }
 
+async function getRefreshStats(context: vscode.ExtensionContext) {
+  const today = getTodayKey();
+  const commits = await getTodayCommits();
+  const breakData = context.globalState.get<any>("breakStats", {});
+  const breaks = breakData[today] || 0;
+
+  return {
+    commits,
+    breaks,
+    tip: HEALTH_TIPS[Math.floor((Date.now() / 86400000) % HEALTH_TIPS.length)], // Daily tip
+  };
+}
+
 function stopAlarm(context: vscode.ExtensionContext) {
   if (alarmTimer) {
     clearInterval(alarmTimer);
@@ -212,7 +268,12 @@ function stopAlarm(context: vscode.ExtensionContext) {
   alarmTime = undefined;
   alarmTriggered = false;
   context.globalState.update("alarmTime", undefined);
-  viewProvider.updateState(undefined);
+
+  // Update view without alarm time but with fresh stats
+  getRefreshStats(context).then((stats) => {
+    viewProvider.updateState(undefined, undefined, stats);
+  });
+
   statusBarItem.hide();
   stopSound();
 }

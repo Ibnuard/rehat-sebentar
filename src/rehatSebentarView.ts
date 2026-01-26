@@ -80,12 +80,13 @@ export class RehatSebentarView implements vscode.WebviewViewProvider {
     vscode.commands.executeCommand("rehatsebentar.setAlarm", timeStr);
   }
 
-  public updateState(alarmTime?: string, remaining?: string) {
+  public updateState(alarmTime?: string, remaining?: string, stats?: any) {
     if (this._view) {
       this._view.webview.postMessage({
         command: "updateState",
         alarmTime,
         remaining,
+        stats,
       });
     }
   }
@@ -153,6 +154,10 @@ export class RehatSebentarView implements vscode.WebviewViewProvider {
     </div>
 
     <button id="stop-btn" class="btn-outline" style="display: none;">Stop Alarm</button>
+
+    <div id="stats-area" class="stats-minimal" style="display: none;">
+      <p id="stats-text"></p>
+    </div>
 
     <div class="hint">
       "☕ Rehat sebentar. Kode bisa nunggu."
@@ -234,6 +239,17 @@ export class RehatSebentarView implements vscode.WebviewViewProvider {
           card.classList.remove('active-timer');
           stopBtn.style.display = 'none';
           controls.style.display = 'block';
+        }
+
+        if (message.stats) {
+          const { breaks, commits } = message.stats;
+          if (breaks > 0 || commits > 0) {
+            document.getElementById('stats-area').style.display = 'block';
+            document.getElementById('stats-text').innerText = 
+               'Hari ini kamu sudah ' + breaks + 'x rehat dan ' + commits + ' commit. Mantap!';
+          } else {
+            document.getElementById('stats-area').style.display = 'none';
+          }
         }
       } else if (message.command === 'updateSound') {
         document.getElementById('sound-toggle').checked = message.enabled;
