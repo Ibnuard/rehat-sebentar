@@ -1,71 +1,32 @@
-# rehatsebentar README
+# Rehat Sebentar ☕
 
-This is the README for your extension "rehatsebentar". After writing up a brief description, we recommend including the following sections.
+**Rehat Sebentar** adalah ekstensi VS Code sederhana yang membantu developer menjaga produktivitas dan kesehatan dengan pengingat jeda istirahat (break reminders).
 
-## Features
+Sebagai developer, saya sendiri sering lupa waktu saat ngoding, bilangnya sebentar nyatanya sampe subuh. Dan saya sadar menjaga kesahatan itu juga penting, memberi tubuh kita cukup istirahat sehingga kita bisa ngoding lebih produktif lagi.
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+## Fitur Utama
 
-For example if there is an image subfolder under your extension project workspace:
+- **Preset Break**: Pilihan cepat untuk istirahat 5m, 15m, 30m, atau 1 jam.
+- **Custom Alarm**: Atur waktu sesuai keinginan.
+- **Countown Real-time**: Pantau sisa waktu langsung dari sidebar.
+- **Modal Alarm**: Notifikasi muncul sebagai modal overlay sehingga pengguna lebih aware.
+- **Snooze Support**: Butuh 5 menit lagi? Cukup klik Snooze.
+- **Clean UI**: Tampilan yang bersih dan terintegrasi langsung dengan tema VS Code ( Thank you gemini ).
 
-\!\[feature X\]\(images/feature-x.png\)
+## Cara Penggunaan
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+1.  Klik icon kopi ☕ pada Activity Bar (sidebar kiri).
+2.  Pilih salah satu preset atau masukkan waktu kustom.
+3.  Gas ngoding! Sidebar akan otomatis menyembunyikan kontrol dan hanya menampilkan countdown.
+4.  Saat waktu habis, sebuah pengingat akan muncul di layar Anda.
+5.  Jangan ngoding sampe subuh lagi ya! 🥱.
 
-## Requirements
+## Catatan
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+Ekstensi ini dirancang agar tetap sederhana dan mengedepankan fungsi utamanya yaitu memberikan pengingat jeda istirahat.
 
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+"Your health is your greatest wealth." ~ kaya ga selalu soal uang.
 
 ---
 
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+Stay healthy, stay productive!
