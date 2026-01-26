@@ -10,9 +10,18 @@ let alarmTime: string | undefined; // HH:mm
 let alarmTriggered = false;
 let viewProvider: RehatSebentarView;
 let currentSoundProcess: cp.ChildProcess | undefined;
+let statusBarItem: vscode.StatusBarItem;
 
 export function activate(context: vscode.ExtensionContext) {
   viewProvider = new RehatSebentarView(context);
+
+  // Initialize status bar item
+  statusBarItem = vscode.window.createStatusBarItem(
+    vscode.StatusBarAlignment.Right,
+    100,
+  );
+  statusBarItem.command = "rehatsebentarView.focus";
+  context.subscriptions.push(statusBarItem);
 
   // Restore state
   alarmTime = context.globalState.get<string>("alarmTime");
@@ -149,6 +158,11 @@ function startAlarmChecking(
 
     viewProvider.updateState(targetTime, remainingStr);
 
+    // Update status bar
+    statusBarItem.text = `$(coffee) ${remainingStr}`;
+    statusBarItem.tooltip = `RehatSebentar: Target ${targetTime}`;
+    statusBarItem.show();
+
     if (currentStr === targetTime && !alarmTriggered) {
       alarmTriggered = true;
 
@@ -199,6 +213,7 @@ function stopAlarm(context: vscode.ExtensionContext) {
   alarmTriggered = false;
   context.globalState.update("alarmTime", undefined);
   viewProvider.updateState(undefined);
+  statusBarItem.hide();
   stopSound();
 }
 
