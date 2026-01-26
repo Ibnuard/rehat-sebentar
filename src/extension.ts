@@ -298,15 +298,43 @@ function playSound(context: vscode.ExtensionContext, loop: boolean) {
     soundFile,
   ).fsPath;
 
-  // Since user is on Mac
-  if (loop) {
-    // Wrap afplay in a loop shell command
-    currentSoundProcess = cp.spawn("sh", [
-      "-c",
-      `while true; do afplay "${soundPath}"; done`,
-    ]);
-  } else {
-    currentSoundProcess = cp.spawn("afplay", [soundPath]);
+  const platform = process.platform;
+
+  if (platform === "darwin") {
+    if (loop) {
+      currentSoundProcess = cp.spawn("sh", [
+        "-c",
+        `while true; do afplay "${soundPath}"; done`,
+      ]);
+    } else {
+      currentSoundProcess = cp.spawn("afplay", [soundPath]);
+    }
+  } else if (platform === "win32") {
+    // Windows PowerShell loop
+    if (loop) {
+      currentSoundProcess = cp.spawn("powershell", [
+        "-c",
+        `while($true) { (New-Object Media.SoundPlayer '${soundPath}').PlaySync() }`,
+      ]);
+    } else {
+      currentSoundProcess = cp.spawn("powershell", [
+        "-c",
+        `(New-Object Media.SoundPlayer '${soundPath}').Play()`,
+      ]);
+    }
+  } else if (platform === "linux") {
+    // Linux loop (trying aplay then paplay)
+    if (loop) {
+      currentSoundProcess = cp.spawn("sh", [
+        "-c",
+        `while true; do (aplay "${soundPath}" || paplay "${soundPath}"); done`,
+      ]);
+    } else {
+      currentSoundProcess = cp.spawn("sh", [
+        "-c",
+        `aplay "${soundPath}" || paplay "${soundPath}"`,
+      ]);
+    }
   }
 }
 
