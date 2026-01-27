@@ -55,7 +55,7 @@ export class RehatSebentarView implements vscode.WebviewViewProvider {
     // Send initial state
     this.updateState();
     this.updateSoundState(
-      this.context.globalState.get<boolean>("soundEnabled", true),
+      this.context.globalState.get<boolean>("soundEnabled", false),
       this.context.globalState.get<string>("selectedSound", "alarm1.wav"),
     );
   }
@@ -136,7 +136,7 @@ export class RehatSebentarView implements vscode.WebviewViewProvider {
       <div class="setting-group">
         <label class="switch-label">
           <span>Enable Sound</span>
-          <input type="checkbox" id="sound-toggle" checked />
+          <input type="checkbox" id="sound-toggle" />
         </label>
       </div>
 

@@ -26,7 +26,29 @@ export function activate(context: vscode.ExtensionContext) {
   // Restore state
   alarmTime = context.globalState.get<string>("alarmTime");
   if (alarmTime) {
-    startAlarmChecking(context, alarmTime);
+    const now = new Date();
+    const [h, m] = alarmTime.split(":").map(Number);
+    const alarmDate = new Date();
+    alarmDate.setHours(h, m, 0, 0);
+
+    // If alarm time is in the past (more than 1 min ago), discard it
+    // Unless it's seemingly for tomorrow? No, simpler to just discard on restart if it passed.
+    // Logic: If now > alarmDate + 1 min, then it's stale.
+    // Note: This simple check assumes alarm is for "today" initially.
+    // If user set alarm for 09:00 and it's 10:00, it's stale.
+    // If user set alarm for 09:00 tomorrow? Use logic similar to startAlarmChecking but simpler.
+
+    // Actually, let's just use a simple heuristic: if it's clearly passed today, don't resume it as "tomorrow".
+    // Most users won't expect an alarm set yesterday to ring today after restart unless explicitly recurring.
+
+    if (now.getHours() * 60 + now.getMinutes() > h * 60 + m + 1) {
+      // It's past today's time for this alarm.
+      // Clear it.
+      context.globalState.update("alarmTime", undefined);
+      alarmTime = undefined;
+    } else {
+      startAlarmChecking(context, alarmTime);
+    }
   }
 
   const testCommand = vscode.commands.registerCommand(
@@ -209,7 +231,7 @@ function startAlarmChecking(
       // Play sound if enabled (with loop)
       const soundEnabled = context.globalState.get<boolean>(
         "soundEnabled",
-        true,
+        false,
       );
       if (soundEnabled) {
         playSound(context, true);
