@@ -2,13 +2,22 @@
   "name": "rehatsebentar",
   "displayName": "RehatSebentar",
   "description": "Gentle reminders to help developers take breaks and stop on time",
-  "version": "0.0.1",
+  "version": "0.0.3",
+  "license": "MIT",
+  "publisher": "ibnuard",
+  "repository": "https://github.com/Ibnuard/rehat-sebentar",
   "engines": {
     "vscode": "^1.108.0"
   },
   "categories": [
     "Other"
   ],
+  "keywords": [
+    "Time Tracker",
+    "Productivity",
+    "Alarm"
+  ],
+  "icon": "icon.png",
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {

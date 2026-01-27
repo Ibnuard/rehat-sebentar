@@ -2,7 +2,7 @@
 
 **Rehat Sebentar** adalah ekstensi VS Code sederhana yang membantu developer menjaga produktivitas dan kesehatan dengan pengingat jeda istirahat (break reminders).
 
-Sebagai developer, saya sendiri sering lupa waktu saat ngoding, bilangnya sebentar nyatanya sampe subuh. Dan saya sadar menjaga kesahatan itu juga penting, memberi tubuh kita cukup istirahat sehingga kita bisa ngoding lebih produktif lagi.
+Sebagai developer, saya sendiri sering lupa waktu saat ngoding, bilangnya sebentar nyatanya sampai subuh. Dan saya sadar menjaga kesehatan itu juga penting, memberi tubuh kita cukup istirahat sehingga kita bisa ngoding lebih produktif lagi.
 
 ## Fitur Utama
 
@@ -10,7 +10,7 @@ Sebagai developer, saya sendiri sering lupa waktu saat ngoding, bilangnya sebent
 - **Custom Alarm**: Atur waktu sesuai keinginan.
 - **Countown Real-time**: Pantau sisa waktu langsung dari sidebar.
 - **Modal Alarm**: Notifikasi muncul sebagai modal overlay sehingga pengguna lebih aware.
-- **Alarm Sound**: Dukungan 3 suara alarm kustom (`alarm1.wav`, `alarm2.wav`, `alarm3.wav`).
+- **Alarm Sound**: Ada 3 pilihan alarm yang menenangkan.
 - **Preview Suara**: Cek suara pilihan Anda secara langsung sebelum menyetel alarm.
 - **Snooze Support**: Butuh 5 menit lagi? Cukup klik Snooze.
 - **Clean UI**: Tampilan yang bersih dan terintegrasi langsung dengan tema VS Code ( Thank you gemini ).
